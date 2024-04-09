@@ -15,15 +15,18 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // we need to wait if on a live network so we can verify properly
         waitConfirmations: network.config.blockConfirmations || 1,
     })
-    
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+
+    if (
+        !developmentChains.includes(network.name) &&
+        process.env.ETHERSCAN_API_KEY
+    ) {
         await verify(funWithStorage.address, [])
     }
 
     log("Logging storage...")
     for (let i = 0; i < 10; i++) {
         log(
-            `Location ${i}: ${await ethers.provider.getStorageAt(
+            `Location ${i}: ${await ethers.provider.getStorage(
                 funWithStorage.address,
                 i
             )}`
